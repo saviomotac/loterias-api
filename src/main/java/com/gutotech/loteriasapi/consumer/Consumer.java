@@ -24,7 +24,7 @@ import com.gutotech.loteriasapi.util.SSLHelper;
 @Component
 public class Consumer {
 
-	private final String BASE_URL = "https://www.sorteonline.com.br/";
+	private final String BASE_URL = "https://www.megaloterias.com.br/";
 
 	public Resultado getResultado(String loteria, int concurso) throws IOException {
 		return getResultado(loteria, String.valueOf(concurso));
@@ -37,31 +37,36 @@ public class Consumer {
 
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-		Document doc = SSLHelper.getConnection(BASE_URL + loteria + "/resultados/" + concurso).get();
-		Element resultElement = doc.getElementById("DivDeVisibilidade[0]");
+		Document doc = SSLHelper.getConnection(BASE_URL + loteria + "/resultados" + (!concurso.isEmpty() ? "?drawNumber=" + concurso : "")).get();
+		Element resultElement = doc.getElementsByClass("lottery-totem").first();
 
 		Resultado resultado = new Resultado(
 				new ResultadoId(loteria, concurso.equals("") ? 0 : Integer.parseInt(concurso)));
 
 		// Nome da Loteria
-		resultado.setNome(resultElement.select(".title .name").text());
+		resultado.setNome(resultElement.select(".result__title").text());
 
 		// Concurso
 		resultado.setConcurso(
-				Integer.valueOf(resultElement.getElementsByClass("header-resultados__nro-concurso").text()));
+				Integer.valueOf(resultElement.select(".result__draw > strong").text()));
 
 		// Data
-		String data = resultElement.getElementsByClass("header-resultados__datasorteio").text();
+		String data = resultElement.select(".result__draw-date > strong").text();
 		if (data.toUpperCase().equals("HOJE")) {
 			data = dateFormat.format(new Date());
 		}
 		resultado.setData(data);
 
 		// Local
-		resultado.setLocal(resultElement.getElementsByClass("header-resultados__local-sorteio").text());
+		resultado.setLocal(resultElement.select(".result__local strong").text());
 
 		// Dezenas
-		Elements numbers = resultElement.select(".bg");
+		Elements numbers = resultElement.select(".lot-bg-light > span");
+		
+		if (numbers.size() == 0) {
+			numbers = resultElement.select(".result__federal-item__val");
+		}
+		
 		for (Element element : numbers) {
 			try {
 				Integer.parseInt(element.text());
@@ -72,24 +77,28 @@ public class Consumer {
 		}
 
 		// Premiacoes
-		Elements premiacoesTrs = resultElement.select(".block-table .result .tr");
+		Elements premiacoesTrs = resultElement.select(".result__table-prize tr");
+		
+		int count = 0;
 		for (Element tr : premiacoesTrs) {
-			if (tr.classNames().size() > 1) {
+			if (count++ == 0) {
 				continue;
 			}
 
 			Premiacao premiacao = new Premiacao();
 
-			premiacao.setAcertos(tr.getElementsByClass("td").get(0).text());
+			Elements tds = tr.select("td");
+			
+			premiacao.setAcertos(tds.get(0).text());
 
 			try {
 				premiacao.setVencedores(
-						Integer.parseInt(tr.getElementsByClass("td").get(1).text().replaceAll("[^\\d.]", "")));
+						Integer.parseInt(tds.get(1).text()));
 			} catch (Exception e) {
 				premiacao.setVencedores(0);
 			}
 
-			premiacao.setPremio(tr.getElementsByClass("td").get(2).text());
+			premiacao.setPremio(tds.get(2).text());
 
 			resultado.getPremiacoes().add(premiacao);
 		}
@@ -105,11 +114,18 @@ public class Consumer {
 		}
 
 		// Acumulado
-		resultado.setAcumulou(resultElement.getElementsByClass("acumulado").size() > 0);
-		resultado.setAcumuladaProxConcurso(resultElement.getElementsByClass("estimative").select(".value").text());
+		resultado.setAcumulou(resultElement.select(".result__content__wrap p strong").size() > 0);
+		
+		Element valorAcumuladoElement = resultElement.select(".result__acumulations div div.lot-color").first();
+		
+		if (valorAcumuladoElement != null) {
+			resultado.setAcumuladaProxConcurso(valorAcumuladoElement.text());
+		}
 
-		// Data Proximo Concurso
-		String dataProxConcurso = resultElement.getElementsByClass("foother-resultados__data-sorteio").text();
+		
+		Element nextDrawElement = doc.getElementsByClass("banner-nextdraw__info").first();
+		// Data Proximo Concursoresult__federal-item__val
+		String dataProxConcurso = nextDrawElement.select(".banner-nextdraw__draw-date strong").text();
 
 		if (dataProxConcurso != null) {
 			if (dataProxConcurso.toLowerCase().equals("hoje")) {
@@ -124,13 +140,13 @@ public class Consumer {
 		resultado.setDataProxConcurso(dataProxConcurso);
 
 		// Time de coracao
-		if (resultElement.getElementsByClass("lnr-heart").size() > 0) {
-			resultado.setTimeCoracao(resultElement.getElementsByClass("time-coracao").text());
+		if (resultElement.select(".tens-grid-timemania-second-result .fa-heart").size() > 0) {
+			resultado.setTimeCoracao(resultElement.select(".tens-grid-timemania-second-result span").text());
 		}
 
 		// Mes de sorte
-		if (resultElement.getElementsByClass("lnr-calendar-full").size() > 0) {
-			resultado.setMesSorte(resultElement.getElementsByClass("time-coracao").text());
+		if (resultElement.select(".tens-grid-timemania-second-result .fa-calendar").size() > 0) {
+			resultado.setMesSorte(resultElement.select(".tens-grid-timemania-second-result span").text());
 		}
 
 		return resultado;

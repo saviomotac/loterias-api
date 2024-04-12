@@ -43,8 +43,10 @@ public class LoteriasUpdate {
 			Resultado latestResultado = consumer.getResultado(loteria, null);
 
 			Resultado myLatestResultado = resultadoService.findLatest(loteria);
-
-			if (myLatestResultado.getConcurso() == latestResultado.getConcurso()) {
+			
+			if (myLatestResultado.getConcurso() == 0) {
+				resultadoService.save(latestResultado);
+			} else if (myLatestResultado.getConcurso() == latestResultado.getConcurso()) {
 				myLatestResultado.setData(latestResultado.getData());
 				myLatestResultado.setLocal(latestResultado.getLocal());
 				myLatestResultado.setPremiacoes(latestResultado.getPremiacoes());
