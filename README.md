@@ -19,9 +19,9 @@ A API é 100% gratuita. Porém ela está hospedada no [Heroku](https://www.herok
 
 Então se você achou este projeto interessante ou é útil para você de alguma forma, por favor considere fazer uma doação para ajudar com os custos da hospedagem, qualquer valor ajudará.
 
-**Para doar copie e cole no seu navegador o seguinte link**: https://pag.ae/7ZqNrvmsK
+**Para doar copie e cole no seu navegador o seguinte link**: https://link.mercadopago.com.br/loteriasapi ou clique aqui [Doação](https://link.mercadopago.com.br/loteriasapi)
 
-![Donate](https://stc.pagseguro.uol.com.br/public/img/botoes/doacoes/205x30-doar.gif) 
+![Donate](https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/6.7.34/mercadopago/logo__large.png) 
 
 ## Exemplos de Retorno
 Atualmente o banco de dados contém os jogos das loterias ...
