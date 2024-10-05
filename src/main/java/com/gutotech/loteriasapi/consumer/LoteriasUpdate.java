@@ -11,9 +11,12 @@ import org.springframework.stereotype.Component;
 import com.gutotech.loteriasapi.model.Loteria;
 import com.gutotech.loteriasapi.model.Resultado;
 import com.gutotech.loteriasapi.service.ResultadoService;
+import com.gutotech.loteriasapi.util.SSLHelper;
 
 @Component
 public class LoteriasUpdate {
+
+	private static final String BASE_LOTERIAS_API_URL = "https://loterias-api-latest.onrender.com/api";
 
 	@Autowired
 	private LoteriaUpdateTask loteriaUpdateTask;
@@ -67,6 +70,14 @@ public class LoteriasUpdate {
 					}
 				}
 			}
+		}
+	}
+
+	public void keepServiceUp() {
+		try {
+			SSLHelper.getConnection(BASE_LOTERIAS_API_URL).get();
+		} catch (IOException e) {
+			//Nothing...
 		}
 	}
 

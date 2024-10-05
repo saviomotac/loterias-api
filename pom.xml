@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.gutotech</groupId>
 	<artifactId>loterias-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>loterias-api</name>
-	<description>Demo project for Spring Boot</description>
+	<description>API para resultados das loterias da Caixa</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -58,6 +58,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>loterias-api</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

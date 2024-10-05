@@ -15,7 +15,7 @@ import org.jsoup.Jsoup;
 public class SSLHelper {
 
 	static public Connection getConnection(String url) {
-		return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory());
+		return Jsoup.connect(url).ignoreContentType(true).sslSocketFactory(SSLHelper.socketFactory());
 	}
 
 	static private SSLSocketFactory socketFactory() {
