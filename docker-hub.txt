@@ -1,5 +1,4 @@
-docker build -t saviomotac/loterias-api:0.0.1 .
-docker push saviomotac/loterias-api:0.0.1
-docker push saviomotac/loterias-api:0.0.1
-docker tag saviomotac/loterias-api:0.0.1 saviomotac/loterias-api:latest
+docker build -t saviomotac/loterias-api:0.0.2 .
+docker push saviomotac/loterias-api:0.0.2
+docker tag saviomotac/loterias-api:0.0.2 saviomotac/loterias-api:latest
 docker push saviomotac/loterias-api:latest

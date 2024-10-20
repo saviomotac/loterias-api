@@ -67,4 +67,9 @@ public class ResultadoService {
 		repository.saveAll(resultados);
 	}
 
+	
+	public void deleteAll() {
+		repository.deleteAll();
+		cacheManager.getCache(CACHE_NAME).clear();
+	}
 }

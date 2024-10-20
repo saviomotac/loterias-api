@@ -15,5 +15,9 @@ public class RootRestController {
 	public void redirectToSwagger(HttpServletResponse response) throws IOException {
 		response.sendRedirect("/swagger-ui/");
 	}
+	
+	@RequestMapping(value = "/reset")
+	public void reset() {
+	}
 
 }
