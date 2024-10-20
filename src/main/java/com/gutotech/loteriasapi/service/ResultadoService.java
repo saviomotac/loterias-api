@@ -74,12 +74,12 @@ public class ResultadoService {
 	
 	public void reset() {
 		repository.deleteAll();
-		cacheManager.getCache(CACHE_NAME).clear();
 		
 		try {
 			loteriasUpdate.checkForUpdates();
 		} catch (IOException e) {
 			return;
 		}
+		cacheManager.getCache(CACHE_NAME).clear();
 	}
 }
