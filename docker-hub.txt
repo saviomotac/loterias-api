@@ -1,4 +1,5 @@
-docker build -t saviomotac/loterias-api:0.0.2 .
+mvn clean compile package
+docker build -t saviomotac/loterias-api:0.0.2 .
 docker push saviomotac/loterias-api:0.0.2
 docker tag saviomotac/loterias-api:0.0.2 saviomotac/loterias-api:latest
 docker push saviomotac/loterias-api:latest
