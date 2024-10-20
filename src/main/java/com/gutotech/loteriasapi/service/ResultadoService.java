@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.gutotech.loteriasapi.consumer.Consumer;
+import com.gutotech.loteriasapi.consumer.LoteriasUpdate;
 import com.gutotech.loteriasapi.model.Resultado;
 import com.gutotech.loteriasapi.model.ResultadoId;
 import com.gutotech.loteriasapi.repository.ResultadoRepository;
@@ -28,6 +29,9 @@ public class ResultadoService {
 	
 	@Autowired
 	private ResultadoRepository repository;
+	
+	@Autowired
+	private LoteriasUpdate loteriasUpdate;
 
 	@Cacheable(CACHE_NAME)
 	public List<Resultado> findByLoteria(String loteria) {
@@ -68,8 +72,14 @@ public class ResultadoService {
 	}
 
 	
-	public void deleteAll() {
+	public void reset() {
 		repository.deleteAll();
 		cacheManager.getCache(CACHE_NAME).clear();
+		
+		try {
+			loteriasUpdate.checkForUpdates();
+		} catch (IOException e) {
+			return;
+		}
 	}
 }
